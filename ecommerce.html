@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyShop - E-Commerce</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav {
+      background: linear-gradient(135deg, #1e90ff, #0047ab);
+      color: #fff;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h1 {
+      margin: 0;
+    }
+
+    nav .links a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav .links a:hover {
+      text-decoration: underline;
+    }
+
+    nav .cart {
+      background: #43a047;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Product grid */
+    .products {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product {
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product:hover {
+      transform: scale(1.05);
+    }
+
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .product h3 {
+      margin: 10px 0 5px;
+    }
+
+    .product p {
+      font-weight: bold;
+      color: #0047ab;
+    }
+
+    .product button {
+      background: #1e90ff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .product button:hover {
+      background: #0047ab;
+    }
+
+    /* Cart section */
+    .cart-section {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 360px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+      transition: right 0.3s;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .cart-section.active {
+      right: 0;
+    }
+
+    .cart-section h2 {
+      margin-top: 0;
+      color: #1e90ff;
+    }
+
+    .cart-header, .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-header span, .cart-item span {
+      padding: 5px;
+    }
+
+    .quantity-controls {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .quantity-controls button {
+      padding: 3px 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      background: #f0f0f0;
+    }
+
+    .quantity-controls button:hover {
+      background: #ddd;
+    }
+
+    .total {
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 18px;
+      text-align: right;
+    }
+
+    .cart-buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cart-buttons button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .back-btn {
+      background: #1976d2;
+      color: #fff;
+    }
+
+    .back-btn:hover {
+      background: #0d47a1;
+    }
+
+    .buy-btn {
+      background: #43a047;
+      color: #fff;
+    }
+
+    .buy-btn:hover {
+      background: #2e7d32;
+    }
+
+    /* Footer (fixed bottom) */
+    footer {
+      background: linear-gradient(135deg, #0047ab, #1e90ff);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <h1>MyShop</h1>
+    <div class="links">
+      <a href="#">Home</a>
+      <a href="#">Products</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="cart" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</div>
+  </nav>
+
+  <!-- Products -->
+  <div class="products">
+    <div class="product">
+      <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" alt="Smartphone">
+      <h3>Smartphone</h3>
+      <p>₹15,000</p>
+      <button onclick="addToCart('Smartphone', 15000)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500" alt="Laptop">
+      <h3>Laptop</h3>
+      <p>₹55,000</p>
+      <button onclick="addToCart('Laptop', 55000)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="smartwatch.jpg" alt="Smart Watch">
+      <h3>Smart Watch</h3>
+      <p>₹3,500</p>
+      <button onclick="addToCart('Smart Watch', 3500)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="bluetoothspeaker.jpg" alt="Bluetooth Speaker">
+      <h3>Bluetooth Speaker</h3>
+      <p>₹2,000</p>
+      <button onclick="addToCart('Bluetooth Speaker', 2000)">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Cart Section -->
+  <div class="cart-section" id="cart-section">
+    <h2>Your Cart</h2>
+    <div id="cart-items">
+      <div class="cart-header" style="font-weight:bold; border-bottom:1px solid #ddd; margin-bottom:10px;">
+        <span style="flex:2">Item</span>
+        <span style="flex:1; text-align:center">Unit Cost</span>
+        <span style="flex:1; text-align:center">Quantity</span>
+        <span style="flex:1; text-align:right">Total</span>
+      </div>
+    </div>
+    <div class="total">Grand Total: ₹<span id="total">0</span></div>
+    <div class="cart-buttons">
+      <button class="back-btn" onclick="toggleCart()">⬅ Back to Shopping</button>
+      <button class="buy-btn" onclick="alert('Proceeding to Buy...')">✅ Proceed to Buy</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All Rights Reserved. </p>
+  </footer>
+
+  <script>
+    let cart = [];
+
+    function addToCart(product, price) {
+      let existing = cart.find(item => item.product === product);
+      if (existing) {
+        existing.quantity += 1;
+        existing.totalPrice += price;
+      } else {
+        cart.push({ product, price, quantity: 1, totalPrice: price });
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      let cartItems = document.getElementById("cart-items");
+      // Keep header only
+      cartItems.innerHTML = `
+        <div class="cart-header" style="display:flex; justify-content: space-between; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:5px; margin-bottom:10px;">
+          <span style="flex:2">Item</span>
+          <span style="flex:1; text-align:center">Unit Cost</span>
+          <span style="flex:1; text-align:center">Quantity</span>
+          <span style="flex:1; text-align:right">Total</span>
+        </div>
+      `;
+
+      let totalAmount = 0;
+      cart.forEach(item => {
+        totalAmount += item.totalPrice;
+        let div = document.createElement("div");
+        div.classList.add("cart-item");
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.style.padding = "5px 0";
+
+        div.innerHTML = `
+          <span style="flex:2">${item.product}</span>
+          <span style="flex:1; text-align:center">₹${item.price}</span>
+          <span style="flex:1; text-align:center">
+            <div class="quantity-controls">
+              <button onclick="changeQuantity('${item.product}', -1)">−</button>
+              ${item.quantity}
+              <button onclick="changeQuantity('${item.product}', 1)">+</button>
+            </div>
+          </span>
+          <span style="flex:1; text-align:right">₹${item.totalPrice}</span>
+        `;
+        cartItems.appendChild(div);
+      });
+
+      document.getElementById("cart-count").innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById("total").innerText = totalAmount;
+    }
+
+    function changeQuantity(product, change) {
+      let item = cart.find(i => i.product === product);
+      if (!item) return;
+      item.quantity += change;
+      item.totalPrice = item.quantity * item.price;
+
+      // Remove if quantity is 0
+      if (item.quantity <= 0) {
+        cart = cart.filter(i => i.product !== product);
+      }
+
+      updateCart();
+    }
+
+    function toggleCart() {
+      document.getElementById("cart-section").classList.toggle("active");
+    }
+  </script>
+
+</body>
+</html>
